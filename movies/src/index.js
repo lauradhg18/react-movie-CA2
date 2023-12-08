@@ -18,6 +18,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage'
 
+//Add protectedRoutes import ProtectedRoutes from "./protectedRoutes";
+
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -59,4 +62,3 @@ const App = () => {
 const rootElement = createRoot( document.getElementById("root") )
 rootElement.render(<App />);
 
-// <Route path="/movies/actor/:department" element={<DepartmentPage />} />

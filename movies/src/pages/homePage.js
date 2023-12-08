@@ -1,5 +1,6 @@
-import {useState, useEffect} from "react";
-import { getMovies } from "../api/tmdb-api";
+import {useState} from "react";
+// before import { getMovies } from "../api/movies-api";
+import { getMovies } from "../api/movies"
 import PageTemplate from '../components/templateMovieListPage';
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
@@ -15,7 +16,7 @@ const HomePage = (props) => {
 
   const { data, error, isLoading, isError } = useQuery(
     ['movies'+currentPage, currentPage],
-    () => getMovies(currentPage), 
+    () => getMovies(currentPage),          
     {
       keepPreviousData: true, 
     }
@@ -34,6 +35,8 @@ const HomePage = (props) => {
     return <h1>{error.message}</h1>
   }  
   const movies = data.results;
+
+  console.log("disco¡", movies)
 
 
   // Redundant, but necessary to avoid app crashing.
