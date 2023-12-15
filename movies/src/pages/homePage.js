@@ -1,5 +1,4 @@
 import {useState} from "react";
-// before import { getMovies } from "../api/movies-api";
 import { getMovies } from "../api/movies"
 import PageTemplate from '../components/templateMovieListPage';
 import { useQuery } from 'react-query';
@@ -36,7 +35,6 @@ const HomePage = (props) => {
   }  
   const movies = data.results;
 
-  console.log("disco¡", movies)
 
 
   // Redundant, but necessary to avoid app crashing.

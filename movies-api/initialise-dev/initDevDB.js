@@ -6,6 +6,7 @@ import movies from './movies';
 import User from '../api/users/userModel';
 import Movie from '../api/movies/movieModel';
 
+
 async function main() {
     if (process.env.NODE_ENV !== 'development') {
         console.log('This script is only for the development environment.');

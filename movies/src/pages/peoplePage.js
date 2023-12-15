@@ -1,9 +1,8 @@
 import {useState, useEffect} from "react";
-import { getPeople } from "../api/tmdb-api";
+import { getPeople } from "../api/movies";
 import PeoplePageTemplate from '../components/templatePeopleListPage';
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
-// import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 const PeoplePage = (props) => {

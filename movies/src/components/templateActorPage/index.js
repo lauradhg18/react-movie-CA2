@@ -3,7 +3,7 @@ import PeopleHeader from "../headerPeople";
 import Grid from "@mui/material/Grid";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { getActorImages } from "../../api/tmdb-api";
+import { getActorImages } from "../../api/movies";
 import { useQuery } from "react-query";
 import Spinner from '../spinner'
 

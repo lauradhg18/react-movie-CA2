@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {postFavoriteMovies, deleteFavoriteMovies} from "../api/movies";
+
 
 export const MoviesContext = React.createContext(null);
 
@@ -7,17 +9,25 @@ const MoviesContextProvider = (props) => {
   const [watchList, setWatchList] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
 
-
-  const addToFavorites = (movie) => {
+  
+  const addToFavorites = async (movie) => {
+    
     let newFavorites = [];
     if (!favorites.includes(movie.id)){
       newFavorites = [...favorites, movie.id];
+      await postFavoriteMovies(movie);
+      setFavorites(newFavorites);
+      //return (result.code == 201) ? true : false;
+      
     }
     else{
       newFavorites = [...favorites];
+      setFavorites(newFavorites);
     }
-    setFavorites(newFavorites)
+   
   };
+
+
    
   const addToWatchList = (movie) => {
     let newWatchList = [];
@@ -41,7 +51,8 @@ const MoviesContextProvider = (props) => {
   
   // We will use this function in a later section
   const removeFromFavorites = (movie) => {
-    setFavorites( favorites.filter(
+    deleteFavoriteMovies(movie.id);
+     setFavorites( favorites.filter(
       (mId) => mId !== movie.id
     ) )
   };

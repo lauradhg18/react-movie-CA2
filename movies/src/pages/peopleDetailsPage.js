@@ -2,14 +2,14 @@ import React from "react";
 import ActorDetails from "../components/peopleDetails";
 import { useParams } from 'react-router-dom';
 import ActorPageTemplate from "../components/templateActorPage";
-import { getActorDetails } from '../api/tmdb-api'
+import { getPeopleDetails } from '../api/movies'
 import { useQuery } from "react-query";
 import Spinner from '../components/spinner'
 
 const ActorPage = () => {
   const { id } = useParams();
   const { data: actorData, error, isLoading, isError } = useQuery(
-    ["actors", { id: id }], getActorDetails);
+    ["actors", { id: id }], getPeopleDetails);
 
   if (isLoading) {
     return <Spinner />;

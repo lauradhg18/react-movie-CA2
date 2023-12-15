@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import StarRate from "@mui/icons-material/StarRate";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { getPeopleMovieCredits} from "../../api/tmdb-api";
+import { getPeopleMovieCredits} from "../../api/movies";
 import { useQuery } from 'react-query';
 import Spinner from '../spinner';
 import AddToFavoritesIcon from '../cardIcons/addToFavorites'

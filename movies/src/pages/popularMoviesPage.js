@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import PageTemplate from '../components/templateMovieListPage'
-import { getPopularMovies } from "../api/tmdb-api";
+import { getPopularMovies } from "../api/movies";
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
 import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'

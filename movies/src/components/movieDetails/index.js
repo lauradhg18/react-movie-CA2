@@ -10,8 +10,7 @@ import React, { useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import MovieReviews from "../movieReviews";
 import MovieRate from "../movieRate";
-import { getMovieRecommendations } from "../../api/tmdb-api";
-import { getMovieCredits } from "../../api/tmdb-api";
+import { getMovieRecommendations, getMovieCredits } from "../../api/movies";
 import { useQuery } from 'react-query';
 import Spinner from '../spinner';
 import AddToFavoritesIcon from '../cardIcons/addToFavorites'
@@ -154,7 +153,7 @@ const MovieDetails = ({movie}) => {
       </Typography>
    
       <MovieActorsTemplate
-       cast={movieActorCredits }
+       cast={movieActorCredits}
       />
       
       
