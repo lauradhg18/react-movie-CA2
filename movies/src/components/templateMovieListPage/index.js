@@ -3,11 +3,14 @@ import Header from "../headerMovieList";
 import FilterCard from "../filterMoviesCard";
 import MovieList from "../movieList";
 import Grid from "@mui/material/Grid";
-
-
+import Fab from "@mui/material/Fab";
+import Drawer from "@mui/material/Drawer";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import LoginPage from "../../pages/loginPage";
 
 function MovieListPageTemplate({ movies, title, action}) {
   
+  const [loginDrawerOpen, setLoginDrawerOpen] = useState(false);
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
   const genreId = Number(genreFilter);
@@ -43,6 +46,24 @@ function MovieListPageTemplate({ movies, title, action}) {
             <MovieList action={action} movies={displayedMovies}></MovieList>
           </Grid>
         </Grid>
+
+        <Fab
+        color="secondary"
+        variant="extended"
+        onClick={() =>setLoginDrawerOpen(true)}
+        sx={{
+            position: "fixed",
+            bottom: '1em',
+            right: '1em'
+        }}
+      >
+        <NavigationIcon />
+        Login
+      </Fab>
+
+      <Drawer anchor="top" open={loginDrawerOpen} onClose={() => setLoginDrawerOpen(false)}>
+      <LoginPage />
+      </Drawer>
         
        </div>
         

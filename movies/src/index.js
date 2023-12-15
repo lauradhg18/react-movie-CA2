@@ -17,6 +17,12 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage'
+import LoginPage from "./pages/loginPage";
+import SignUpPage from "./pages/singUpPage";
+import ProfilePage from "./pages/profilePage";
+import AuthContextProvider from "./contexts/authContext";
+import ProtectedRoutes from "./protectedRoutes";
+
 
 //Add protectedRoutes import ProtectedRoutes from "./protectedRoutes";
 
@@ -35,11 +41,11 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <AuthContextProvider>
         <SiteHeader />
         <MoviesContextProvider>
         <Routes>
-          <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
-          <Route path="/movies/watchList" element={<WatchListMoviesPage />} />
+          
           {<Route path="/movies/upcoming" element={<UpcomingPage />} /> }
           {<Route path="/movies/topRated" element={ <TopRatedMoviesPage /> } />}
           {<Route path="/movies/latest" element={ <LatestMoviesPage /> } />}
@@ -50,9 +56,17 @@ const App = () => {
           <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
           <Route path="/movies/people" element={<PeoplePage />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={ <SignUpPage /> } />
+          <Route path="/login" element={ <LoginPage /> } />
+          <Route element={<ProtectedRoutes />}>
+          <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+          <Route path="/movies/watchList" element={<WatchListMoviesPage />} />
+          <Route path="/movies/profile" element={ <ProfilePage /> } />
+            </Route>
           <Route path="*" element={ <Navigate to="/" /> } />
         </Routes>
         </MoviesContextProvider>
+        </AuthContextProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

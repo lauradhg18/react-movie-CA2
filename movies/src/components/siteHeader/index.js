@@ -11,10 +11,13 @@ import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { AuthContext } from "../../contexts/authContext";
 
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader = ({ history }) => {
+  
+  const context = React.useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -23,10 +26,8 @@ const SiteHeader = ({ history }) => {
   
   const navigate = useNavigate();
 
-  const menuOptions = [
+  let menuOptions = [
     { label: "Home", path: "/" },
-    { label: "Favorites", path: "/movies/favorites" },
-    { label: "WatchList", path: "/movies/watchList" },
     { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Top Rated", path: "/movies/topRated" },
     { label: "Latest", path: "/movies/latest" },
@@ -34,6 +35,23 @@ const SiteHeader = ({ history }) => {
     { label: "People", path: "/movies/people" },
     
   ];
+
+  if (context.isAuthenticated === true) {
+    menuOptions = [
+      { label: "Welcome xx !"},
+      { label: "Profile", path: "/movies/profile" },
+      { label: "Home", path: "/" },
+      { label: "Favorites", path: "/movies/favorites" },
+      { label: "WatchList", path: "/movies/watchList" },
+      { label: "Upcoming", path: "/movies/upcoming" },
+      { label: "Top Rated", path: "/movies/topRated" },
+      { label: "Latest", path: "/movies/latest" },
+      { label: "Popular", path: "/movies/popular" },
+      { label: "People", path: "/movies/people" },
+      
+    ];
+  }
+  
 
   const handleMenuSelect = (pageURL) => {
     navigate(pageURL, { replace: true });
