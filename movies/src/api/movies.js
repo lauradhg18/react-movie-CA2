@@ -47,6 +47,7 @@ export const getMovies = async (page) => {
         'Authorization': window.localStorage.getItem('token')
       }*/
       method: 'get'
+      
     }
     )
     return response.json();
