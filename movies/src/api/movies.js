@@ -47,7 +47,7 @@ export const getMovies = async (page) => {
         'Authorization': window.localStorage.getItem('token')
       }*/
       method: 'get'
-      
+
     }
     )
     return response.json();
@@ -239,6 +239,21 @@ export const getMovies = async (page) => {
     return response.json();
   };
 
+  export const getWatchList = async ({ queryKey }) => {
+    const [, idPart] = queryKey;
+    const  { id } = idPart;
+    const response = await fetch(
+      'http://localhost:8080/api/movies/watchList/'+ id, {
+      /*headers: {
+        'Authorization': window.localStorage.getItem('token')
+      }
+    */
+      method: 'get'
+    }
+    )
+    return response.json();
+  };
+
   export const postFavoriteMovies = async (movie) => {
  
     const response = await fetch('http://localhost:8080/api/movies/favs', {
@@ -251,6 +266,19 @@ export const getMovies = async (page) => {
     return response.json();
   };
 
+  export const postWatchList = async (movie) => {
+ 
+    const response = await fetch('http://localhost:8080/api/movies/watchList', {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'post',
+        body: JSON.stringify(movie)
+    });
+    return response.json();
+  };
+
+
   export const deleteFavoriteMovies = async (id) => {
  
     const response = await fetch('http://localhost:8080/api/movies/favs/'+ id, {
@@ -260,6 +288,17 @@ export const getMovies = async (page) => {
     });
     return response;
   };
+
+  export const deleteWatchList = async (id) => {
+ 
+    const response = await fetch('http://localhost:8080/api/movies/watchList/'+ id, {
+        
+        method: 'delete'
+        
+    });
+    return response;
+  };
+
 
   export const login = async (username, password) => {
     const response = await fetch('http://localhost:8080/api/users', {

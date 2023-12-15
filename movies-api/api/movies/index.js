@@ -1,5 +1,6 @@
 import movieModel from './movieModel';
 import favoriteModel from './favoriteMoviesModel';
+import watchListModel from './watchListModel'
 import asyncHandler from 'express-async-handler';
 import express from 'express';
 import {
@@ -204,6 +205,44 @@ router.delete('/favs/:id', asyncHandler(async (req, res) => {
 router.get('/favs/:id', asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
     const movie = await favoriteModel.findByMovieDBId(id);
+
+    if (movie) {
+        res.status(200).json(movie);
+    } else {
+        res.status(404).json({message: 'No favourite movies', status_code: 404});
+    }
+}));
+
+//watchList
+
+router.post('/watchList', asyncHandler(async (req, res) => {
+    try {
+        
+        const movies = await watchListModel.create(req.body);
+        res.status(201).json({ success: true, msg: 'success.' });
+        
+    } catch (error) {
+        res.status(500).json({ success: false, msg: 'Internal server error.' });
+    }
+}));
+
+router.delete('/watchList/:id', asyncHandler(async (req, res) => {
+    if (req.body._id) delete req.body._id;
+    const id = parseInt(req.params.id);
+    const result = await watchListModel.deleteOne({
+        id: id,
+    });
+    if (result.deletedCount) {
+        res.status(204).json();
+    } else {
+        res.status(404).json({ code: 404, msg: 'Unable to find movie' });
+    }
+}));
+
+
+router.get('/watchList/:id', asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    const movie = await watchListModel.findByMovieDBId(id);
 
     if (movie) {
         res.status(200).json(movie);

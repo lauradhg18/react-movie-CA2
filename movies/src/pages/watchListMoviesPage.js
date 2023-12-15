@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
-import { getMovie } from "../api/tmdb-api";
+import { getWatchList } from "../api/movies";
 import Spinner from '../components/spinner'
 import RemoveFromWatchList from "../components/cardIcons/removeFromWatchList";
 
@@ -17,7 +17,7 @@ const WatchListMoviesPage = () => {
     movieIds.map((movieId) => {
       return {
         queryKey: ["movieWatchList", { id: movieId }],
-        queryFn: getMovie,
+        queryFn: getWatchList,
       };
     })
   );
@@ -28,10 +28,12 @@ const WatchListMoviesPage = () => {
     return <Spinner />;
   }
 
-  const movies = watchListMovieQueries.map((q) => {
-    q.data.genre_ids = q.data.genres.map(g => g.id)
-    return q.data
-  });
+  let movies = watchListMovieQueries;  
+  if (watchListMovieQueries.length !== 0) {
+    movies = watchListMovieQueries.map((q) => {
+      return q.data
+    });
+  }
 
   const toDo = () => true;
 

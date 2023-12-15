@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {postFavoriteMovies, deleteFavoriteMovies} from "../api/movies";
+import {postFavoriteMovies, deleteFavoriteMovies, postWatchList, deleteWatchList} from "../api/movies";
 
 
 export const MoviesContext = React.createContext(null);
@@ -17,7 +17,7 @@ const MoviesContextProvider = (props) => {
       newFavorites = [...favorites, movie.id];
       await postFavoriteMovies(movie);
       setFavorites(newFavorites);
-      //return (result.code == 201) ? true : false;
+      
       
     }
     else{
@@ -29,20 +29,24 @@ const MoviesContextProvider = (props) => {
 
 
    
-  const addToWatchList = (movie) => {
+  const addToWatchList = async (movie) => {
     let newWatchList = [];
     if (!watchList.includes(movie.id)){
       newWatchList = [...watchList, movie.id];
+      await postWatchList(movie);
+      setWatchList(newWatchList)
     }
     else{
       newWatchList = [...watchList];
+      setWatchList(newWatchList)
     }
-    setWatchList(newWatchList)
+   
   };
 
 
 
   const removeFromWatchList = (movie) => {
+    deleteWatchList(movie.id);
       setWatchList(watchList.filter(
          (mId) => mId !== movie.id
       ) )
