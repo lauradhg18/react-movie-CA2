@@ -175,77 +175,129 @@ router.get('/tmdb/department', asyncHandler(async (req, res) => {
 
 // add movie to favorites
 router.post('/favs', asyncHandler(async (req, res) => {
-    try {
-        
-        const movies = await favoriteModel.create(req.body);
-        res.status(201).json({ success: true, msg: 'success.' });
-        
-    } catch (error) {
-        res.status(500).json({ success: false, msg: 'Internal server error.' });
-    }
+   
+
+            const movieID = req.body.movie
+            const username = req.body.username
+            const movieIn = await favoriteModel.findByMovieDBId(movieID.id)
+           
+            
+            if(movieIn){
+                await favoriteModel.addUser(username, movieIn)
+                await movieIn.save();
+          
+                res.status(201).json({ success: true, msg: 'success.' });
+
+            } else{ 
+                const { movie, username } = req.body;
+                movie.usernames = [{ username: username }];
+
+                await favoriteModel.create(movie);
+          
+                res.status(201).json({ success: true, msg: 'success.' });
+            }   
+
 }));
 
 //delete from favorite list
 
-router.delete('/favs/:id', asyncHandler(async (req, res) => {
-    if (req.body._id) delete req.body._id;
+router.delete('/favs/:id/:username', asyncHandler(async (req, res) => {
+    
     const id = parseInt(req.params.id);
-    const result = await favoriteModel.deleteOne({
-        id: id,
-    });
-    if (result.deletedCount) {
-        res.status(204).json();
-    } else {
-        res.status(404).json({ code: 404, msg: 'Unable to find movie' });
-    }
-}));
+    const username = req.params.username;
+
+    const result = await favoriteModel.updateOne(
+            { id: id },
+            { $pull: { usernames: { username: username } } }
+    );
+   
+
+    if (result) {
+        
+        const updatedMovie = await favoriteModel.findOne({ id: id });
+        
+        if (updatedMovie && updatedMovie.usernames.length === 0) {
+            if (req.body._id) delete req.body._id;
+            const result = await favoriteModel.deleteOne({ id: id });
+            if (result.deletedCount) {
+                res.status(204).json();
+            } else {
+                res.status(404).json({ code: 404, msg: 'Unable to find movie' });
+            }
+        } else {
+            res.status(200).json(updatedMovie);
+        }
+    
+    
+}}));
 
 
 //retrieve favourites movies
-router.get('/favs/:id', asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    const movie = await favoriteModel.findByMovieDBId(id);
-
-    if (movie) {
-        res.status(200).json(movie);
+router.get('/favs/:username', asyncHandler(async (req, res) => {
+    const username = req.params.username;
+    const movies = await favoriteModel.findMoviesByUsername(username);
+    
+    if (movies) {
+        res.status(200).json(movies);
     } else {
         res.status(404).json({message: 'No favourite movies', status_code: 404});
     }
+    
 }));
 
 //watchList
 
 router.post('/watchList', asyncHandler(async (req, res) => {
-    try {
-        
-        const movies = await watchListModel.create(req.body);
-        res.status(201).json({ success: true, msg: 'success.' });
-        
-    } catch (error) {
-        res.status(500).json({ success: false, msg: 'Internal server error.' });
-    }
+
+    const movieID = req.body.movie
+            const username = req.body.username
+            const movieIn = await watchListModel.findByMovieDBId(movieID.id)
+           
+            
+            if(movieIn){
+                await watchListModel.addUser(username, movieIn)
+                await movieIn.save();
+          
+                res.status(201).json({ success: true, msg: 'success.' });
+
+            } else{ 
+                const { movie, username } = req.body;
+                movie.usernames = [{ username: username }];
+                await watchListModel.create(movie);
+          
+                res.status(201).json({ success: true, msg: 'success.' });
+            }   
 }));
 
-router.delete('/watchList/:id', asyncHandler(async (req, res) => {
-    if (req.body._id) delete req.body._id;
+router.delete('/watchList/:id/:username', asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
-    const result = await watchListModel.deleteOne({
-        id: id,
-    });
-    if (result.deletedCount) {
-        res.status(204).json();
-    } else {
-        res.status(404).json({ code: 404, msg: 'Unable to find movie' });
-    }
+    const username = req.params.username;
+
+        const result = await watchListModel.updateOne(
+            { id: id },
+            { $pull: { usernames: { username: username } } }
+        );
+
+        if (result) {
+            if (req.body._id) delete req.body._id;
+            const result = await watchListModel.deleteOne({ id: id });
+            if (result.deletedCount) {
+                res.status(204).json();
+            } else {
+                res.status(404).json({ code: 404, msg: 'Unable to find movie' });
+            }
+        } else {
+            res.status(200).json(updatedMovie);
+        }
 }));
 
 
-router.get('/watchList/:id', asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    const movie = await watchListModel.findByMovieDBId(id);
+router.get('/watchList/:username', asyncHandler(async (req, res) => {
+    const username = req.params.username;
+    const movies = await watchListModel.findMoviesByUsername(username);
 
-    if (movie) {
-        res.status(200).json(movie);
+    if (movies) {
+        res.status(200).json(movies);
     } else {
         res.status(404).json({message: 'No favourite movies', status_code: 404});
     }

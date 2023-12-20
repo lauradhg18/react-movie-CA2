@@ -13,36 +13,52 @@ import Grid from "@mui/material/Grid";
 import img from '../../images/film-poster-placeholder.png'
 import { Link } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
-import React, { useContext  } from "react";
+import React, { useContext} from "react";
 import Box from '@mui/material/Box';
 import { MoviesContext } from "../../contexts/moviesContext";
+import { AuthContext } from "../../contexts/authContext";
 
 export default function MovieCard({ movie, action }) {
   const { favorites, addToFavorites } = useContext(MoviesContext);
   const { watchList, addToWatchList } = useContext(MoviesContext);
+  const context = React.useContext(AuthContext);
   
+  if(context.isAuthenticated){
+    let favoritesMovies = favorites ? favorites.map(movie => movie.id) : [];
+    let watchListMovies = watchList ? watchList.map(movie => movie.id) : [];
 
-  if (favorites.find((id) => id === movie.id)) {
-    movie.favorite = true;
+    if (favoritesMovies.find(id => id === movie.id)) {
+      
+      movie.favorite = true;
+    } else {
+     
+       movie.favorite = false;
+    }
+  
+    if (watchListMovies.find(id => id === movie.id)) {
+       movie.watchList = true;
+    } else {
+       movie.watchList = false;
+    }
+ 
+    const handleAddToFavorite = (e) => {
+      e.preventDefault();
+      addToFavorites(movie);
+      
+      
+     
+    };
+
+    const handleAddToWatchList = (e) => {
+      e.preventDefault();
+      addToWatchList(movie);
+    };
+
   } else {
     movie.favorite = false
-  }
-
-  if (watchList.find((id) => id === movie.id)) {
-    movie.watchList = true;
-  } else {
     movie.watchList = false
   }
- 
-  const handleAddToFavorite = (e) => {
-    e.preventDefault();
-    addToFavorites(movie);
-  };
 
-  const handleAddToWatchList = (e) => {
-    e.preventDefault();
-    addToWatchList(movie);
-  };
 
 
   return (

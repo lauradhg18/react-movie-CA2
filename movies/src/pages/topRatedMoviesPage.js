@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import PageTemplate from '../components/templateMovieListPage'
 import { getTopRated } from "../api/movies";
 import { useQuery } from 'react-query';
@@ -10,8 +10,8 @@ import Stack from '@mui/material/Stack';
 const TopRatedMoviesPage = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
     const { data, error, isLoading, isError } = useQuery(
-      ['topRated'+currentPage, currentPage], // Key for the query
-      () => getTopRated(currentPage), // queryFn
+      ['topRated'+currentPage, currentPage], 
+      () => getTopRated(currentPage), 
       {
         keepPreviousData: true, 
       }

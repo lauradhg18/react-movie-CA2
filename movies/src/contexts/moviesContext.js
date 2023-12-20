@@ -1,23 +1,73 @@
 import React, { useState } from "react";
-import {postFavoriteMovies, deleteFavoriteMovies, postWatchList, deleteWatchList} from "../api/movies";
-
+import { AuthContext } from "../contexts/authContext";
+import {getWatchList, getFavouriteMovies, postFavoriteMovies, deleteFavoriteMovies, postWatchList, deleteWatchList} from "../api/movies";
+import { useQuery } from 'react-query';
+import Spinner from '../components/spinner';
 
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
-  const [favorites, setFavorites] = useState( [] )
+
+  const [favorites, setFavorites] = useState([])
   const [watchList, setWatchList] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
+  const context = React.useContext(AuthContext);
+  const username = context.userName;
 
-  
-  const addToFavorites = async (movie) => {
+  const { data: favoriteMovies, isLoading, isError, error } = useQuery(
+    ['moviesFavoriteMovieCard', {username:username}], 
+    getFavouriteMovies, 
+    {
+      enabled: context.isAuthenticated
+    });
+  const { data:  watchListMovies , werror, wisLoading, wisError } = useQuery(
+      ['movieWatchList', {username:username}], 
+      getWatchList, 
+      {
+        enabled: context.isAuthenticated
+      }
     
-    let newFavorites = [];
-    if (!favorites.includes(movie.id)){
-      newFavorites = [...favorites, movie.id];
-      await postFavoriteMovies(movie);
-      setFavorites(newFavorites);
+  );
+  if (isLoading || wisLoading) {
+    return <Spinner />
+  }
+
+  if (isError) {
+    return <h1>{error.message}</h1>
+  }  
+  
+  if (wisError) {
+    return <h1>{werror.message}</h1>
+  }
+ 
+
+  const updateFavorites = async () => {
+    if(favoriteMovies){
+
+      if(favorites.length === 0){
+        setFavorites(favoriteMovies);
+      }
+
+    }
+  }
+  const updateWatchList = async () => {
+    if(watchListMovies){
+
+      if(watchList.length === 0){
+        setWatchList(watchListMovies);
+      }
+
+    }
+  }
+
+  const addToFavorites = async (movie) => {
+
+    let newFavorites = []
+    if (!favorites.includes(movie)){  
       
+      newFavorites = [...favorites, movie];
+      await postFavoriteMovies(movie, username);
+      setFavorites(newFavorites);
       
     }
     else{
@@ -27,13 +77,12 @@ const MoviesContextProvider = (props) => {
    
   };
 
-
-   
   const addToWatchList = async (movie) => {
+    
     let newWatchList = [];
-    if (!watchList.includes(movie.id)){
-      newWatchList = [...watchList, movie.id];
-      await postWatchList(movie);
+    if (!watchList.includes(movie)){
+      newWatchList = [...watchList, movie];
+      await postWatchList(movie, username);
       setWatchList(newWatchList)
     }
     else{
@@ -46,18 +95,18 @@ const MoviesContextProvider = (props) => {
 
 
   const removeFromWatchList = (movie) => {
-    deleteWatchList(movie.id);
-      setWatchList(watchList.filter(
-         (mId) => mId !== movie.id
+    deleteWatchList(movie.id, username);
+     setWatchList(watchList.filter(
+         (mId) => mId !== movie
       ) )
   };
 
   
   // We will use this function in a later section
   const removeFromFavorites = (movie) => {
-    deleteFavoriteMovies(movie.id);
-     setFavorites( favorites.filter(
-      (mId) => mId !== movie.id
+    deleteFavoriteMovies(movie.id, username);
+    setFavorites( favorites.filter(
+      (m) => m !== movie
     ) )
   };
 
@@ -70,6 +119,8 @@ const MoviesContextProvider = (props) => {
       value={{
         favorites,
         watchList,
+        updateFavorites,
+        updateWatchList,
         addToFavorites,
         addToWatchList,
         removeFromWatchList,

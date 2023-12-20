@@ -225,10 +225,10 @@ export const getMovies = async (page) => {
 
 
   export const getFavouriteMovies = async ({ queryKey }) => {
-    const [, idPart] = queryKey;
-    const  { id } = idPart;
+    const [, data] = queryKey;
+    const  { username } = data;
     const response = await fetch(
-      'http://localhost:8080/api/movies/favs/'+ id, {
+      'http://localhost:8080/api/movies/favs/'+ username, {
       /*headers: {
         'Authorization': window.localStorage.getItem('token')
       }
@@ -240,10 +240,10 @@ export const getMovies = async (page) => {
   };
 
   export const getWatchList = async ({ queryKey }) => {
-    const [, idPart] = queryKey;
-    const  { id } = idPart;
+    const [, data] = queryKey;
+    const  { username } = data;
     const response = await fetch(
-      'http://localhost:8080/api/movies/watchList/'+ id, {
+      'http://localhost:8080/api/movies/watchList/'+ username, {
       /*headers: {
         'Authorization': window.localStorage.getItem('token')
       }
@@ -254,34 +254,34 @@ export const getMovies = async (page) => {
     return response.json();
   };
 
-  export const postFavoriteMovies = async (movie) => {
+  export const postFavoriteMovies = async (movie, username) => {
  
     const response = await fetch('http://localhost:8080/api/movies/favs', {
         headers: {
           'Content-Type': 'application/json'
         },
         method: 'post',
-        body: JSON.stringify(movie)
+        body: JSON.stringify({movie: movie, username: username})
     });
     return response.json();
   };
 
-  export const postWatchList = async (movie) => {
+  export const postWatchList = async (movie, username) => {
  
     const response = await fetch('http://localhost:8080/api/movies/watchList', {
         headers: {
           'Content-Type': 'application/json'
         },
         method: 'post',
-        body: JSON.stringify(movie)
+        body: JSON.stringify({movie: movie, username: username})
     });
     return response.json();
   };
 
 
-  export const deleteFavoriteMovies = async (id) => {
+  export const deleteFavoriteMovies = async (id, username) => {
  
-    const response = await fetch('http://localhost:8080/api/movies/favs/'+ id, {
+    const response = await fetch('http://localhost:8080/api/movies/favs/'+ id+'/' + username, {
         
         method: 'delete'
         
@@ -289,16 +289,15 @@ export const getMovies = async (page) => {
     return response;
   };
 
-  export const deleteWatchList = async (id) => {
+  export const deleteWatchList = async (id, username) => {
  
-    const response = await fetch('http://localhost:8080/api/movies/watchList/'+ id, {
+    const response = await fetch('http://localhost:8080/api/movies/watchList/'+ id+'/' + username, {
         
         method: 'delete'
         
     });
     return response;
   };
-
 
   export const login = async (username, password) => {
     const response = await fetch('http://localhost:8080/api/users', {

@@ -1,5 +1,5 @@
 import PageTemplate from '../components/templateMovieListPage'
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import { getUpcomingMovies } from "../api/movies";
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
@@ -12,8 +12,8 @@ const UpcomingPage = (props) => {
    
     const [currentPage, setCurrentPage] = useState(1);
     const { data, error, isLoading, isError } = useQuery(
-      ['upcoming'+currentPage, currentPage], // Key for the query
-      () => getUpcomingMovies(currentPage), // queryFn
+      ['upcoming'+currentPage, currentPage], 
+      () => getUpcomingMovies(currentPage), 
       {
         keepPreviousData: true, 
       }

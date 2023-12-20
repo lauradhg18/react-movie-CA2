@@ -28,11 +28,40 @@ const MovieSchema = new Schema({
   }],
   status: { type: String },
   tagline: { type: String },
-  favorite:{type: Boolean}
+  favorite:{type: Boolean},
+  usernames:[{
+    username: { type: String }
+  }]
 });
+
+MovieSchema.statics.addUser = function (usernameToFind, movie){
+
+  const foundUsername = movie.usernames.some(aux => aux.username === usernameToFind);
+  
+      //const foundUsername = movie.usernames.find(aux => aux.username === usernameToFind);
+      if (foundUsername) {
+        console.log(`founded there.`); // do nothing
+      } else {
+        movie.usernames.push({ username: usernameToFind });
+        console.log(movie.usernames)
+      }
+  };
 
 MovieSchema.statics.findByMovieDBId = function (id) {
   return this.findOne({ id: id });
+};
+
+/*MovieSchema.statics.findMoviesByUsername = function (username) {
+  return this.find({ username: username });
+};*/
+
+MovieSchema.statics.findMoviesByUsername = function (username) {
+  return this.find({ usernames: { $elemMatch: { username: username } } });
+  //this.find({ usernames: username });
+};
+
+MovieSchema.statics.findMovieByIDUsername = function (username, id) {
+  return this.findOne({ id: id, username:username});
 };
 
 

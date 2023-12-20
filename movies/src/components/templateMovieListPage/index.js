@@ -7,6 +7,8 @@ import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import LoginPage from "../../pages/loginPage";
+import { MoviesContext } from "../../contexts/moviesContext";
+import { AuthContext } from "../../contexts/authContext";
 
 function MovieListPageTemplate({ movies, title, action}) {
   
@@ -14,8 +16,15 @@ function MovieListPageTemplate({ movies, title, action}) {
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
   const genreId = Number(genreFilter);
+  const context = React.useContext(AuthContext);
+  const {updateFavorites, updateWatchList} = React.useContext(MoviesContext);
 
-  let displayedMovies = movies
+  if(context.isAuthenticated){
+    updateFavorites();
+    updateWatchList();
+
+  }
+ let displayedMovies = movies
     .filter((m) => {
       return m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1;
     })
@@ -29,7 +38,7 @@ function MovieListPageTemplate({ movies, title, action}) {
   };
 
   
-  return (
+  return !context.isAuthenticated ? (
     <div>
     <Grid container sx={{ padding: '20px' }}>
       <Grid item xs={12}>
@@ -57,6 +66,7 @@ function MovieListPageTemplate({ movies, title, action}) {
             right: '1em'
         }}
       >
+        
         <NavigationIcon />
         Login
       </Fab>
@@ -67,6 +77,24 @@ function MovieListPageTemplate({ movies, title, action}) {
         
        </div>
         
+  ):( 
+    <div>
+    <Grid container sx={{ padding: '20px' }}>
+      <Grid item xs={12}>
+        <Header title={title} />
+      </Grid>
+      <Grid item container spacing={5}>
+        <Grid key="findmovies" item xs={12} sm={6} md={4} lg={3} xl={2}>
+          <FilterCard
+            onUserInput={handleChange}
+            titleFilter={nameFilter}
+            genreFilter={genreFilter}
+            />
+            </Grid>
+            <MovieList action={action} movies={displayedMovies}></MovieList>
+          </Grid>
+        </Grid>
+        </div>
 
       );
     }

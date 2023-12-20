@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import PageTemplate from '../components/templateMovieListPage'
 import { getPopularMovies } from "../api/movies";
 import { useQuery } from 'react-query';
@@ -13,8 +13,8 @@ const PopularMoviesPage = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const { data, error, isLoading, isError } = useQuery(
-      ['popular'+currentPage, currentPage], // Key for the query
-      () => getPopularMovies(currentPage), // queryFn
+      ['popular'+currentPage, currentPage],
+      () => getPopularMovies(currentPage), 
       {
         keepPreviousData: true, 
       }

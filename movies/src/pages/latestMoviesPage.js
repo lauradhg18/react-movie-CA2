@@ -9,22 +9,19 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 const LatestMoviesPage = (props) => {
-  // const storedPage = localStorage.getItem('currentPage') || 1;
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, error, isLoading, isError } = useQuery(
-    ['latest', currentPage], // Key for the query
-    () => getLatestMovies(currentPage), // queryFn
+    ['latest', currentPage], 
+    () => getLatestMovies(currentPage), 
     {
-      keepPreviousData: true, // Keep previous data while fetching new data
+      keepPreviousData: true,
     }
   );
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
   };
-//  useEffect(() => {
-  //  localStorage.setItem('currentPage', currentPage);
- // }, [currentPage]);
+
   
     if (isLoading) {
       return <Spinner />

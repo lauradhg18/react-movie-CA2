@@ -19,6 +19,7 @@ const SiteHeader = ({ history }) => {
   
   const context = React.useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const username = context.userName;
   const open = Boolean(anchorEl);
 
   const theme = useTheme();
@@ -38,7 +39,6 @@ const SiteHeader = ({ history }) => {
 
   if (context.isAuthenticated === true) {
     menuOptions = [
-      { label: "Welcome xx !"},
       { label: "Profile", path: "/movies/profile" },
       { label: "Home", path: "/" },
       { label: "Favorites", path: "/movies/favorites" },
@@ -52,7 +52,7 @@ const SiteHeader = ({ history }) => {
     ];
   }
   
-
+  
   const handleMenuSelect = (pageURL) => {
     navigate(pageURL, { replace: true });
   };
@@ -61,7 +61,7 @@ const SiteHeader = ({ history }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  return (
+  return !context.isAuthenticated ? (
     <>
       <AppBar position="fixed" color="secondary">
         <Toolbar>
@@ -124,6 +124,69 @@ const SiteHeader = ({ history }) => {
       </AppBar>
       <Offset />
     </>
+  ):( <>
+    <AppBar position="fixed" color="secondary">
+      <Toolbar>
+        <Typography variant="h4" sx={{ flexGrow: 1 }}>
+          TMDB Client
+        </Typography>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          Welcome {username}!
+        </Typography>
+          {isMobile ? (
+            <>
+              <IconButton
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+              >
+                {menuOptions.map((opt) => (
+                  <MenuItem
+                    key={opt.label}
+                    onClick={() => handleMenuSelect(opt.path)}
+                  >
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          ) : (
+            <>
+              {menuOptions.map((opt) => (
+                <Button
+                  key={opt.label}
+                  color="inherit"
+                  onClick={() => handleMenuSelect(opt.path)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+            </>
+          )}
+      </Toolbar>
+    </AppBar>
+    <Offset />
+  </>
+
   );
 };
 
