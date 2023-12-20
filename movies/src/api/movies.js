@@ -307,7 +307,9 @@ export const getMovies = async (page) => {
         method: 'post',
         body: JSON.stringify({ username: username, password: password })
     });
-    return response.json();
+    const data = response.json();
+    
+    return data;
 };
 
 export const signup = async (username, password) => {

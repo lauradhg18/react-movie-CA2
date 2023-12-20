@@ -5,16 +5,17 @@ import { Link } from "react-router-dom";
 
 const LoginPage = props => {
     const context = useContext(AuthContext);
+    const {errorMessage} = useContext(AuthContext);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [signUpMessage, setSignUpdMessage] = useState(false);
+    const [signUpMessage, setSignUpdMessage] = useState("");
 
 
     const login = () => {
-        const check = context.authenticate(userName, password);
+        context.authenticate(userName, password);
         
-       if(!check){
-        setSignUpdMessage(true);
+       if(errorMessage !== ""){
+        setSignUpdMessage(errorMessage);
        }
     };
 
@@ -26,7 +27,7 @@ const LoginPage = props => {
     if (context.isAuthenticated === true) {
         return <Navigate to={from} />;
     }
-    return !signUpMessage? (
+    return signUpMessage === "" ? (
         <>
             <h2>Login page</h2>
             <p>You must log in to view the protected pages </p>
@@ -44,7 +45,7 @@ const LoginPage = props => {
     ):(
         <>
         <h2>Login page</h2>
-        <p>Not registered, sign up!</p>
+        <p>{signUpMessage}</p>
         <input id="username" placeholder="user name" onChange={e => {
             setUserName(e.target.value);
         }}></input><br />

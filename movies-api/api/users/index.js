@@ -51,6 +51,7 @@ async function registerUser(req, res) {
 async function authenticateUser(req, res) {
     const user = await User.findByUserName(req.body.username);
     if (!user) {
+        
         return res.status(401).json({ success: false, msg: 'Authentication failed. User not found.' });
     }
 
