@@ -11,6 +11,7 @@ const MoviesContextProvider = (props) => {
   const [favorites, setFavorites] = useState([])
   const [watchList, setWatchList] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
+  const [currentUser, setCurrentUser] =useState("");
   const context = React.useContext(AuthContext);
   const username = context.userName;
 
@@ -44,6 +45,11 @@ const MoviesContextProvider = (props) => {
   const updateFavorites = async () => {
     if(favoriteMovies){
 
+      if(currentUser !== username){
+        setCurrentUser(username);
+        setFavorites([]);
+      }
+
       if(favorites.length === 0){
         setFavorites(favoriteMovies);
       }
@@ -52,6 +58,10 @@ const MoviesContextProvider = (props) => {
   }
   const updateWatchList = async () => {
     if(watchListMovies){
+      if(currentUser !== username){
+        setCurrentUser(username);
+        setWatchList([]);
+      }
 
       if(watchList.length === 0){
         setWatchList(watchListMovies);

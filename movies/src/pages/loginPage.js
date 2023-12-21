@@ -8,14 +8,14 @@ const LoginPage = props => {
     const {errorMessage} = useContext(AuthContext);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [signUpMessage, setSignUpdMessage] = useState("");
+    const [Message, setMessage] = useState("");
 
 
     const login = () => {
         context.authenticate(userName, password);
         
        if(errorMessage !== ""){
-        setSignUpdMessage(errorMessage);
+        setMessage(errorMessage);
        }
     };
 
@@ -27,7 +27,7 @@ const LoginPage = props => {
     if (context.isAuthenticated === true) {
         return <Navigate to={from} />;
     }
-    return signUpMessage === "" ? (
+    return Message === "" ? (
         <>
             <h2>Login page</h2>
             <p>You must log in to view the protected pages </p>
@@ -45,7 +45,7 @@ const LoginPage = props => {
     ):(
         <>
         <h2>Login page</h2>
-        <p>{signUpMessage}</p>
+        <p>{Message}</p>
         <input id="username" placeholder="user name" onChange={e => {
             setUserName(e.target.value);
         }}></input><br />
